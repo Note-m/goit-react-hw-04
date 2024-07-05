@@ -1,5 +1,9 @@
 const ErrorMessage = () => {
-  return <div></div>;
+  return (
+    <div>
+      <p>Error please reload page!</p>
+    </div>
+  );
 };
 
 export default ErrorMessage;

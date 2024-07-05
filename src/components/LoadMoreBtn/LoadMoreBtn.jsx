@@ -1,5 +1,9 @@
 const LoadMoreBtn = () => {
-  return <div></div>;
+  return (
+    <div>
+      <button>Load more</button>
+    </div>
+  );
 };
 
 export default LoadMoreBtn;
