@@ -1,7 +1,9 @@
-const LoadMoreBtn = () => {
+const LoadMoreBtn = ({ onSubmit }) => {
   return (
     <div>
-      <button>Load more</button>
+      <button onSubmit={onSubmit} type="submit">
+        Load more
+      </button>
     </div>
   );
 };

@@ -10,7 +10,7 @@ const ImageGallery = ({ photos }) => {
           </li>
         ))} */}
         <li>
-          <ImageCard photos={photos} />
+          <ImageCard onSearch={photos} />
         </li>
       </ul>
     </div>
