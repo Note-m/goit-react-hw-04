@@ -47,6 +47,9 @@ const App = () => {
         setLoading(true);
         const res = await featchPhotos(topic, page);
         setTotalPages(res.total_pages);
+        setDatas((prevdatas) => {
+          return [...prevdatas, ...res.results];
+        });
         console.log(totalPages);
       } catch (error) {
         console.log(datas);

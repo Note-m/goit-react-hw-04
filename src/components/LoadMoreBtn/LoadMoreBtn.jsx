@@ -1,7 +1,7 @@
 const LoadMoreBtn = ({ onSubmit }) => {
   return (
     <div>
-      <button onSubmit={onSubmit} type="submit">
+      <button onClick={onSubmit} type="submit">
         Load more
       </button>
     </div>
