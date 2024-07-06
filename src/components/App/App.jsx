@@ -5,39 +5,35 @@ import { featchPhotos } from "../../gallery-api";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import { Circles } from "react-loader-spinner";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
-// import axios from "axios";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import ImageModal from "../ImageModal/ImageModal";
 
 const App = () => {
   const [topic, setTopic] = useState("");
-
   const [datas, setDatas] = useState([]);
-
   const [loading, setLoading] = useState(false);
-
+  const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
-
   const [totalPages, setTotalPages] = useState(999);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleInpValue = async (newTopic) => {
-    if (!newTopic) {
-      toast.error("Need type 1 or more symbols");
-      return;
-    }
-    try {
-      setDatas([]);
-      setTopic(newTopic);
-      setPage(1);
-      const data = await featchPhotos(newTopic, 1);
-      console.log(data.results);
-      console.log(data.total_pages);
-      setDatas(data);
-    } catch (error) {
-      toast.error("some errors");
-    }
+    setDatas([]);
+    setTopic(newTopic);
+    setPage(1);
+    const data = await featchPhotos(newTopic, 1);
+    setDatas(data.results);
   };
+
   const handleLoadMore = () => {
     setPage(page + 1);
+    //
+    if (totalPages <= page) {
+      console.log("error");
+    }
   };
+
   useEffect(() => {
     if (topic === "") {
       return;
@@ -50,15 +46,26 @@ const App = () => {
         setDatas((prevdatas) => {
           return [...prevdatas, ...res.results];
         });
-        console.log(totalPages);
+        setError(false);
       } catch (error) {
-        console.log(datas);
+        setError(true);
+        toast.error("Error please reload page");
       } finally {
         setLoading(false);
       }
     }
     getMorePhotos();
-  }, [datas, topic, page]);
+  }, [topic, page]);
+
+  const handleImageClick = (photo) => {
+    setSelectedImage(photo);
+    setModalIsOpen(true);
+  };
+
+  function closeModal() {
+    setSelectedImage(null);
+    setModalIsOpen(false);
+  }
 
   return (
     <div>
@@ -74,11 +81,17 @@ const App = () => {
           visible={true}
         />
       )}
-
-      {topic !== "" && totalPages >= page && (
-        <ImageGallery photos={datas.results || []} />
+      {modalIsOpen && selectedImage && (
+        <ImageModal onClose={closeModal} photo={selectedImage} />
       )}
-      <LoadMoreBtn onSubmit={handleLoadMore} />
+      {topic !== "" && totalPages >= page && (
+        <ImageGallery photos={datas || []} onImageClick={handleImageClick} />
+      )}
+      {error && <ErrorMessage />}
+      {datas.length > 0 && !loading && (
+        <LoadMoreBtn onSubmit={handleLoadMore} />
+      )}
+
       <Toaster position="top-right" />
     </div>
   );

@@ -1,17 +1,13 @@
-const ImageCard = ({ onSearch }) => {
+const ImageCard = ({
+  photo: {
+    alt_description,
+    urls: { small },
+  },
+  onImageClick,
+}) => {
   return (
-    <div>
-      {onSearch.map((photo, index) => (
-        <picture key={index}>
-          <source srcSet={photo.urls.small} />
-          <source srcSet={photo.urls.regular} />
-          <img
-            src={photo.urls.small}
-            srcSet={`${photo.small} 1x, ${photo.regular} 2x`}
-            alt={photo.description || "Image"}
-          />
-        </picture>
-      ))}
+    <div onClick={() => onImageClick()}>
+      <img src={small} alt={alt_description || "Image"} />
     </div>
   );
 };

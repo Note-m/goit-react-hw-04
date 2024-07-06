@@ -1,19 +1,14 @@
 import ImageCard from "../ImageCard/ImageCard";
 
-const ImageGallery = ({ photos }) => {
+const ImageGallery = ({ photos, onImageClick }) => {
   return (
-    <div>
-      <ul>
-        {/* {photos.map((photo, index) => (
-          <li key={index}>
-            <ImageCard photos={photo} />
-          </li>
-        ))} */}
-        <li>
-          <ImageCard onSearch={photos} />
+    <ul>
+      {photos.map((photo, index) => (
+        <li key={index}>
+          <ImageCard photo={photo} onImageClick={() => onImageClick(photo)} />
         </li>
-      </ul>
-    </div>
+      ))}
+    </ul>
   );
 };
 
