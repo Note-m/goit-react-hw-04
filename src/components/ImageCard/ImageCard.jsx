@@ -1,3 +1,5 @@
+import css from "./ImageCard.module.css";
+
 const ImageCard = ({
   photo: {
     alt_description,
@@ -6,8 +8,13 @@ const ImageCard = ({
   onImageClick,
 }) => {
   return (
-    <div onClick={() => onImageClick()}>
-      <img src={small} alt={alt_description || "Image"} />
+    <div className={css.wrapperImageCard}>
+      <img
+        className={css.imageCard}
+        onClick={() => onImageClick()}
+        src={small}
+        alt={alt_description || "Image"}
+      />
     </div>
   );
 };

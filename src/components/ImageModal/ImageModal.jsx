@@ -1,28 +1,28 @@
 import Modal from "react-modal";
-
-// const customStyles = {
-//   content: {
-//     top: "50%",
-//     left: "50%",
-//     right: "auto",
-//     bottom: "auto",
-//     marginRight: "-50%",
-//     transform: "translate(-50%, -50%)",
-//   },
-// };
+import css from "./ImageModal.module.css";
 
 Modal.setAppElement("#root");
-
+//destructurization array photos
 const ImageModal = ({
   onClose,
+  customStyles,
   photo: {
     alt_description,
     urls: { regular },
   },
 }) => {
+  //modal with params and photo with params
   return (
-    <Modal isOpen={true} onRequestClose={onClose} contentLabel="Selected Image">
-      <img src={regular} alt={alt_description} />
+    <Modal
+      className={css.modal}
+      isOpen={true}
+      style={customStyles}
+      onRequestClose={onClose}
+      overlayClassName={css.overlay}
+      contentClassName={css.content}
+      contentLabel="Selected Image"
+    >
+      <img className={css.imgModal} src={regular} alt={alt_description} />
     </Modal>
   );
 };

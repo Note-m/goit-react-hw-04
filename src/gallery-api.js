@@ -7,11 +7,15 @@ export const featchPhotos = async (topic, currentPage) => {
   const response = await axios.get("/search/photos", {
     params: {
       client_id: accessKey,
+      orientation: "landscape",
       query: topic,
       page: currentPage,
       per_page: 10,
     },
   });
 
-  return response.data;
+  return {
+    results: response.data.results || [],
+    total_pages: response.data.total_pages || 0,
+  };
 };

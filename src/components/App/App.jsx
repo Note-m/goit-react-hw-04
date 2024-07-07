@@ -18,45 +18,35 @@ const App = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleInpValue = async (newTopic) => {
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+    },
+  };
+
+  //function for search images by value from searchbar(input)
+  const handleInpSearchValue = async (newTopic) => {
     setDatas([]);
     setTopic(newTopic);
     setPage(1);
-    const data = await featchPhotos(newTopic, 1);
-    setDatas(data.results);
+    // const data = await featchPhotos(newTopic, 1);
+    // setDatas(data.results);
   };
 
+  //function for button which load more images when u press her
   const handleLoadMore = () => {
     setPage(page + 1);
-    //
     if (totalPages <= page) {
       console.log("error");
     }
   };
 
-  useEffect(() => {
-    if (topic === "") {
-      return;
-    }
-    async function getMorePhotos() {
-      try {
-        setLoading(true);
-        const res = await featchPhotos(topic, page);
-        setTotalPages(res.total_pages);
-        setDatas((prevdatas) => {
-          return [...prevdatas, ...res.results];
-        });
-        setError(false);
-      } catch (error) {
-        setError(true);
-        toast.error("Error please reload page");
-      } finally {
-        setLoading(false);
-      }
-    }
-    getMorePhotos();
-  }, [topic, page]);
-
+  //function for open image in modal and set image for modal window
   const handleImageClick = (photo) => {
     setSelectedImage(photo);
     setModalIsOpen(true);
@@ -67,9 +57,42 @@ const App = () => {
     setModalIsOpen(false);
   }
 
+  useEffect(() => {
+    // check topic
+    if (topic === "") {
+      return;
+    }
+    //function in useEfect for load more Photos and more...
+    async function getMorePhotos() {
+      try {
+        //show loader while loading photos
+        setLoading(true);
+        const res = await featchPhotos(topic, page);
+        console.log(res.results);
+        //seted total pages for controled how many pages we get
+        setTotalPages(res.total_pages);
+        //copy photos and added new(one more page) and seted error as false bc we getted photos
+        if (res.results.length === 0 && page === 1) {
+          setError(true);
+        } else {
+          setDatas((prevDatas) => [...prevDatas, ...res.results]);
+          setError(false);
+        }
+      } catch (error) {
+        //setted error as true bc we getted some errors
+        setError(true);
+        toast.error("Error please reload page");
+      } finally {
+        // off loader anyway
+        setLoading(false);
+      }
+    }
+    getMorePhotos();
+  }, [topic, page]);
+
   return (
     <div>
-      <SearchBar onSubmit={handleInpValue} />
+      <SearchBar onSubmit={handleInpSearchValue} />
       {loading && (
         <Circles
           height="80"
@@ -81,14 +104,19 @@ const App = () => {
           visible={true}
         />
       )}
+
       {modalIsOpen && selectedImage && (
-        <ImageModal onClose={closeModal} photo={selectedImage} />
+        <ImageModal
+          onClose={closeModal}
+          photo={selectedImage}
+          customStyles={customStyles}
+        />
       )}
       {topic !== "" && totalPages >= page && (
         <ImageGallery photos={datas || []} onImageClick={handleImageClick} />
       )}
       {error && <ErrorMessage />}
-      {datas.length > 0 && !loading && (
+      {datas.length > 0 && totalPages > 1 && page < totalPages && (
         <LoadMoreBtn onSubmit={handleLoadMore} />
       )}
 
